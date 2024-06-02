@@ -1,4 +1,5 @@
-add
-finally
-okay 
-new
+clean the dishes
+wash clothes
+cook food
+clean toilet
+
