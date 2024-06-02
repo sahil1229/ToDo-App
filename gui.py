@@ -1,17 +1,22 @@
 import functions
 import FreeSimpleGUI as sg
 
-label = sg.Text("Type in a todo")
-input_box = sg.InputText(tooltip="Enter Todo", key="todo")
-add_button = sg.Button("Add")
+# Define the layout with improved aesthetics
+layout = [
+    [sg.Text("To-Do App", font=("Helvetica", 20), justification='center')],
+    [sg.Text("Type in a todo:", font=("Helvetica", 12))],
+    [sg.InputText(tooltip="Enter Todo", key="todo", size=(30, 1), font=("Helvetica", 12)),
+     sg.Button("Add", size=(6, 1), font=("Helvetica", 12))],
+    [sg.Listbox(values=functions.get_todos(), key='todos', enable_events=True, size=(45, 10),
+                font=("Helvetica", 12), bind_return_key=True)],
+    [sg.Button("Edit", size=(10, 1), font=("Helvetica", 12)),
+     sg.Button("Complete", size=(10, 1), font=("Helvetica", 12)),
+     sg.Button("Exit", size=(10, 1), font=("Helvetica", 12))]
+]
 
-listbox = sg.Listbox(values=functions.get_todos(), key='todos',
-                     enable_events=True, size=[45, 10])
-edit_button = sg.Button("Edit")
+# Create the window
+window = sg.Window("To-Do App", layout, font=("Helvetica", 12))
 
-window = sg.Window("To-Do App",
-                   layout=[[label], [input_box, add_button], [listbox, edit_button]],
-                   font=("helvetica", 20))
 while True:
     event, values = window.read()
     print(event)
@@ -25,16 +30,27 @@ while True:
             window['todos'].update(values=todos)
 
         case "Edit":
-            todo_to_edit = values['todos'][0]
-            new_todo = values['todo']
             todos = functions.get_todos()
-            index = todos.index(todo_to_edit)
-            todos[index] = new_todo
-            functions.write_todos(todos)
-            window['todos'].update(values=todos)
+            if todos:
+                todo_to_edit = values['todos'][0]
+                new_todo = values['todo']
+                index = todos.index(todo_to_edit)
+                todos[index] = new_todo
+                functions.write_todos(todos)
+                window['todos'].update(values=todos)
 
-        case 'todos':
-            window['todo'].update(value=values['todos'][0])
+        case 'Complete':
+            todos = functions.get_todos()
+            if todos:
+                todo_to_complete = values['todos'][0]
+                todos.remove(todo_to_complete)
+                functions.write_todos(todos)
+                window['todos'].update(values=todos)
+                window['todo'].update(value='')
+
+        case 'Exit':
+            break
+
         case sg.WIN_CLOSED:
             break
 
