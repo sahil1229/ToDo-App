@@ -21,6 +21,7 @@ window = sg.Window("To-Do App", layout, font=("Helvetica", 12))
 while True:
     event, values = window.read(timeout=1000)
     window['clock'].update(value=time.strftime("%b %d, %Y %H:%M:%S"))
+    print("Event:", event)  # Debug print
     match event:
         case "Add":
             todos = functions.get_todos()
@@ -55,9 +56,12 @@ while True:
                 sg.popup("Please select an item first", font=('helvetica', 20))
 
         case 'Exit':
+            print("Exit button pressed")
             break
 
         case sg.WIN_CLOSED:
+            print("Window closed")
             break
 
 window.close()
+
