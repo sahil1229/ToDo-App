@@ -1,3 +1,2 @@
 add
-pooee
-win
+new
